@@ -1,88 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 import { FaShoppingCart } from 'react-icons/fa'; // Import the cart icon
 import Modal from 'react-modal'; // Import modal for showing selected items
-
-type Category = {
-    id: number;
-    name: string;
-};
-
-type Item = {
-    id: number;
-    category_id: number;
-    name: string;
-    price: number;
-    image_url: string;
-};
-
-type SelectedItem = {
-    item: Item;
-    quantity: number;
-};
+import { useOrder } from './context/OrderContext'; // Import context
+import axios from 'axios';
 
 const App: React.FC = () => {
     const [page, setPage] = useState<'welcome' | 'tableSelection' | 'menu'>('welcome');
     const [tableNumber, setTableNumber] = useState<number | null>(null);
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [items, setItems] = useState<Item[]>([]);
-    const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
-
-    useEffect(() => {
-        if (page === 'menu') {
-            axios.get('http://localhost:3000/api/categories')
-                .then(response => {
-                    if (Array.isArray(response.data)) {
-                        setCategories(response.data);
-                    } else {
-                        console.error('Error fetching categories: Response data is not an array');
-                    }
-                })
-                .catch(error => console.error('Error fetching categories:', error));
-        }
-    }, [page]);
+    const { categories, items, selectedItems, fetchCategories, fetchItems, addItem, changeQuantity, removeItem, clearSelectedItems } = useOrder();
 
     const handleCategoryClick = (categoryId: number) => {
-        axios.get(`http://localhost:3000/api/items/${categoryId}`)
-            .then(response => setItems(response.data))
-            .catch(error => console.error('Error fetching items:', error));
-    };
-
-    const handleAddItem = (item: Item) => {
-        const existingItem = selectedItems.find(selectedItem => selectedItem.item.id === item.id);
-        
-        if (existingItem) {
-            const updatedItems = selectedItems.map(selectedItem =>
-                selectedItem.item.id === item.id ? { ...selectedItem, quantity: selectedItem.quantity + 1 } : selectedItem
-            );
-            setSelectedItems(updatedItems);
-        } else {
-            setSelectedItems([...selectedItems, { item, quantity: 1 }]);
-        }
-    };
-
-    const handleQuantityChange = (itemId: number, newQuantity: number) => {
-        const updatedItems = selectedItems.map(selectedItem =>
-            selectedItem.item.id === itemId ? { ...selectedItem, quantity: newQuantity } : selectedItem
-        );
-        setSelectedItems(updatedItems);
-    };
-
-    const handleRemoveItem = (itemId: number) => {
-        const updatedItems = selectedItems.filter(selectedItem => selectedItem.item.id !== itemId);
-        setSelectedItems(updatedItems);
+        fetchItems(categoryId);
     };
 
     const handleSubmitOrder = () => {
         if (tableNumber === null) return;
-        
+
         axios.post('http://localhost:3000/api/orders', {
             tableNumber,
             items: selectedItems.map(selectedItem => ({ id: selectedItem.item.id, quantity: selectedItem.quantity }))
         }).then(response => {
             console.log('Order submitted:', response.data);
-            setSelectedItems([]);
+            clearSelectedItems();
             setIsModalOpen(false); // Close the modal after submitting the order
         }).catch(error => console.error('Error submitting order:', error));
     };
@@ -98,7 +38,7 @@ const App: React.FC = () => {
             <div className="flex items-center justify-center h-screen bg-gray">
                 <div className="text-center flex flex-col items-center justify-center">
                     <img src="/src/assets/Haus.png" alt="Haus caffe" height={250} width={250} />
-                    <h1 className="text-4xl font-bold mb-6 text-red-600">Welcome To <span className='text-main'> KAFFEE HAUS</span></h1>
+                    <h1 className="text-4xl font-bold mb-6 text-white">Welcome To <span className='text-main'> KAFFEE HAUS</span></h1>
                     <button onClick={() => setPage('tableSelection')} className="px-4 py-2 bg-main text-white rounded-lg transition duration-300">Please Tap To Continue</button>
                 </div>
             </div>
@@ -115,7 +55,7 @@ const App: React.FC = () => {
                             <option key={index} value={index + 1}>{index + 1}</option>
                         ))}
                     </select>
-                    <button onClick={() => setPage('menu')} className="px-4 py-2 mx-4 bg-white text-main rounded-lg border-2 border-main font-bold transition duration-300">Next</button>
+                    <button onClick={() => { setPage('menu'); fetchCategories(); }} className="px-4 py-2 mx-4 bg-white text-main rounded-lg border-2 border-main font-bold transition duration-300">Next</button>
                 </div>
             </div>
         );
@@ -137,7 +77,7 @@ const App: React.FC = () => {
                         <div key={item.id} className="border p-4 rounded-lg hover:shadow-lg transition duration-300">
                             <img src={`http://localhost:3000/uploads/${item.image_url}`} alt={item.name} className="w-full h-48 object-cover mb-2" />
                             <p className="text-lg font-semibold">{item.name} - {item.price} IQD</p>
-                            <button onClick={() => handleAddItem(item)} className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700 transition duration-300">Add</button>
+                            <button onClick={() => addItem(item)} className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700 transition duration-300">Add</button>
                         </div>
                     ))}
                 </div>
@@ -159,8 +99,8 @@ const App: React.FC = () => {
                             selectedItems.map((selectedItem, index) => (
                                 <div key={index} className="flex items-center space-x-4 mb-4">
                                     <p className="text-lg">{selectedItem.item.name} - {selectedItem.item.price} IQD</p>
-                                    <input type="number" value={selectedItem.quantity} onChange={(e) => handleQuantityChange(selectedItem.item.id, parseInt(e.target.value))} className="w-16 p-2 border rounded-lg" />
-                                    <button onClick={() => handleRemoveItem(selectedItem.item.id)} className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 transition duration-300">Remove</button>
+                                    <input type="number" value={selectedItem.quantity} onChange={(e) => changeQuantity(selectedItem.item.id, parseInt(e.target.value))} className="w-16 p-2 border rounded-lg" />
+                                    <button onClick={() => removeItem(selectedItem.item.id)} className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 transition duration-300">Remove</button>
                                 </div>
                             ))
                         )}
