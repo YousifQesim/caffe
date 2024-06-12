@@ -1,40 +1,49 @@
 import React, { createContext, useContext, useState } from 'react';
 import axios from 'axios';
 
-
 type Category = {
-  id: number;
-  name: string;
+    id: number;
+    name: string;
 };
 
 type Item = {
-  id: number;
-  category_id: number;
-  name: string;
-  price: number;
-  image_url: string;
+    id: number;
+    category_id: number;
+    name: string;
+    price: number;
+    image_url: string;
 };
 
 type SelectedItem = {
-  item: Item;
-  quantity: number;
+    item: Item;
+    quantity: number;
 };
 
 type OrderContextType = {
-  categories: Category[];
-  items: Item[];
-  selectedItems: SelectedItem[];
-  fetchCategories: () => void;
-  fetchItems: (categoryId: number) => void;
-  addItem: (item: Item) => void;
-  changeQuantity: (itemId: number, newQuantity: number) => void;
-  removeItem: (itemId: number) => void;
-  clearSelectedItems: () => void;
+    page: 'welcome' | 'tableSelection' | 'menu';
+    setPage: React.Dispatch<React.SetStateAction<'welcome' | 'tableSelection' | 'menu'>>;
+    tableNumber: number | null;
+    setTableNumber: React.Dispatch<React.SetStateAction<number | null>>;
+    isModalOpen: boolean;
+    setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    categories: Category[];
+    items: Item[];
+    selectedItems: SelectedItem[];
+    fetchCategories: () => void;
+    fetchItems: (categoryId: number) => void;
+    addItem: (item: Item) => void;
+    changeQuantity: (itemId: number, newQuantity: number) => void;
+    removeItem: (itemId: number) => void;
+    clearSelectedItems: () => void;
 };
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
 export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const [page, setPage] = useState<'welcome' | 'tableSelection' | 'menu'>('welcome');
+    const [tableNumber, setTableNumber] = useState<number | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const [categories, setCategories] = useState<Category[]>([]);
     const [items, setItems] = useState<Item[]>([]);
     const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
@@ -87,7 +96,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
 
     return (
-        <OrderContext.Provider value={{ categories, items, selectedItems, fetchCategories, fetchItems, addItem, changeQuantity, removeItem, clearSelectedItems }}>
+        <OrderContext.Provider value={{ page, setPage, tableNumber, setTableNumber, isModalOpen, setIsModalOpen, categories, items, selectedItems, fetchCategories, fetchItems, addItem, changeQuantity, removeItem, clearSelectedItems }}>
             {children}
         </OrderContext.Provider>
     );
