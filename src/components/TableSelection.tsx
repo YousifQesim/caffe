@@ -1,6 +1,4 @@
-import React from 'react'
-
-import { useOrder } from '../context/OrderContext'; // Import context
+import { useOrder } from '../context/OrderContext'; 
 export default function TableSelection() {
   const {fetchCategories,tableNumber,setTableNumber,setPage } = useOrder();
 
