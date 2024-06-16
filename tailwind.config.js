@@ -15,6 +15,8 @@ export default {
         secmain:'#587060',
         thmain:'#587040',
         text_main:'#F7E1BC',
+        category_back:'#54372B',
+        item_back:'#F7E1BC',
       },
     },
   },

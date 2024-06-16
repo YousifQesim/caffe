@@ -30,19 +30,22 @@ const handleSubmitOrder = () => {
     <div>
         <div className="p-4 relative w-full h-screen ">
                 <h1 className="text-2xl font-bold mb-4">Menu</h1>
-                <div className="flex space-x-4 mb-4">
+                <div className="flex  justify-center flex-wrap gap-8 space-x-4 mb-4">
                     {categories.map(category => (
-                        <button key={category.id} onClick={() => handleCategoryClick(category.id)} className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300">
+                        <button key={category.id} onClick={() => handleCategoryClick(category.id)} className="px-6 py-4 w-32 h-24 bg-category_back rounded-xl text-white transition duration-300">
                             {category.name}
                         </button>
                     ))}
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {items.map(item => (
-                        <div key={item.id} className="border p-4 rounded-lg hover:shadow-lg transition duration-300">
-                            <img src={`http://localhost:3000/uploads/${item.image_url}`} alt={item.name} className="w-full h-48 object-cover mb-2" />
-                            <p className="text-lg font-semibold">{item.name} - {item.price} IQD</p>
-                            <button onClick={() => addItem(item)} className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700 transition duration-300">Add</button>
+                        <div key={item.id} className="border p-4 rounded-lg hover:shadow-lg bg-item_back transition duration-300">
+                            <img src={`http://localhost:3000/uploads/${item.image_url}`} alt={item.name} className="w-full h-48 object-cover" />
+                            <div className='bg-item_back mb-0 flex justify-center items-center gap-6 mt-2'>
+                                
+                            <p className="text-lg font-semibold">{item.name} | {item.price} IQD</p>
+                            <button onClick={() => addItem(item)} className=" px-6 w-24 py-2 bg-thmain text-white rounded-lg hover:bg-green-700 transition duration-300">Add</button>
+                            </div>
                         </div>
                     ))}
                 </div>

@@ -10,7 +10,7 @@ export default function Welcome() {
           src="/src/assets/Haus.png"
           alt="Haus caffe"
           height={100}
-          width={100}
+          width={120}
         />
       <div className="text-center flex flex-col items-center mt-6  w-1/2 float-left  absolute top-1/3  ">
           <h1 className="text-4xl font-bold  text-white">
@@ -33,7 +33,7 @@ search for your coffee now</pre>
           src="/src/assets/HERO.png"
           alt="Haus caffe"
           height={screen.height}
-          width={screen.width/1.9}
+          width={screen.width/1.8}
         />
       </div>
     </div>
