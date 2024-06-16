@@ -1,21 +1,20 @@
-import React from "react";
-import { useOrder } from "./context/OrderContext"; 
-import Welcome from "./components/Welcome";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import WelcomePage from './pages/WelcomePage';
+import AdminPage from './pages/AdminPage';
+import { OrderProvider } from './context/OrderContext';
 
-import Menu from "./components/Menu";
 const App: React.FC = () => {
-  const { page } = useOrder();
-
-  if (page === "welcome") {
-    return <Welcome />;
-  }
-
-
-  if (page === "menu") {
-    return <Menu />;
-  }
-
-  return null;
+  return (
+    <OrderProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<WelcomePage />} />
+          <Route path="/admin" element={<AdminPage />} />
+        </Routes>
+      </Router>
+    </OrderProvider>
+  );
 };
 
 export default App;

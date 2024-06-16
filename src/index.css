@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500..800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
@@ -13,16 +14,7 @@ body{
   position: relative; /* For positioning the pseudo-element */
 }
 
-body::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 200%; /* Extend wider than the container */
-  height: 200%; /* Extend taller than the container */
-  background: radial-gradient(circle at 25% 20%, rgba(255,255,255,0.4), rgba(255,255,255,0) 50%);
-  transform: translate(-50%, -50%); /* Center the gradient */
-}
+
 .font-dancing {
   background-image: linear-gradient(to right, #F7E1BC,#221518);
   -webkit-background-clip: text;

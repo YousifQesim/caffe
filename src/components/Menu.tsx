@@ -28,7 +28,7 @@ const handleSubmitOrder = () => {
 
   return (
     <div>
-        <div className="p-4 relative w-full h-screen">
+        <div className="p-4 relative w-full h-screen ">
                 <h1 className="text-2xl font-bold mb-4">Menu</h1>
                 <div className="flex space-x-4 mb-4">
                     {categories.map(category => (
