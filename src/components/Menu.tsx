@@ -6,30 +6,38 @@ import axios from 'axios';
 export default function Menu() {
   const { categories, items, selectedItems,  addItem, changeQuantity, removeItem,fetchItems ,setIsModalOpen,isModalOpen,tableNumber,clearSelectedItems} = useOrder();
   const handleCategoryClick = (categoryId: number) => {
-    fetchItems(categoryId);
-};
+    fetchItems(categoryId); // Ensure fetchItems is called when selecting a category
+  };
 const toggleModal = () => {
   setIsModalOpen(!isModalOpen);
 };
 
 const totalItems = selectedItems.reduce((sum, selectedItem) => sum + selectedItem.quantity, 0);
 const handleSubmitOrder = () => {
-  if (tableNumber === null) return;
-
-  axios.post('http://localhost:3000/api/orders', {
-      tableNumber,
-      items: selectedItems.map(selectedItem => ({ id: selectedItem.item.id, quantity: selectedItem.quantity }))
-  }).then(response => {
-      console.log('Order submitted:', response.data);
-      clearSelectedItems();
-      setIsModalOpen(false); // Close the modal after submitting the order
-  }).catch(error => console.error('Error submitting order:', error));
-};
+    if (tableNumber === null || selectedItems.length === 0) return;
+  
+    axios.post('http://localhost:3000/api/orders', {
+        tableNumber,
+        items: selectedItems.map(selectedItem => ({ id: selectedItem.item.id, quantity: selectedItem.quantity }))
+    }).then(response => {
+        console.log('Order submitted:', response.data);
+        clearSelectedItems(); // Clear selected items after successful submission
+        setIsModalOpen(false); // Close the modal after submitting the order
+    }).catch(error => console.error('Error submitting order:', error));
+  };
+  
 
   return (
     <div>
         <div className="p-4 relative w-full h-screen ">
-                <h1 className="text-2xl font-bold mb-4">Menu</h1>
+                <h1 className="text-2xl font-bold mb-4 text-white text-center my-4">Menu</h1>
+                <img
+        className=" absolute top-5 left-0"
+          src="/src/assets/Haus.png"
+          alt="Haus caffe"
+          height={100}
+          width={120}
+        />
                 <div className="flex  justify-center flex-wrap gap-8 space-x-4 mb-4">
                     {categories.map(category => (
                         <button key={category.id} onClick={() => handleCategoryClick(category.id)} className="px-6 py-4 w-32 h-24 bg-category_back rounded-xl text-white transition duration-300">
@@ -101,7 +109,7 @@ const handleSubmitOrder = () => {
             ))
         )}
         {selectedItems.length > 0 && (
-            <div className='flex justify-center'>
+            <div className='flex justify-center mt-4'>
                 <button onClick={handleSubmitOrder} className="px-4 py-2 bg-category_back text-white rounded-lg transition duration-300">Submit Order</button>
             </div>
         )}

@@ -20,7 +20,7 @@ export default function Welcome() {
 search for your coffee now</pre>
         <button
           onClick={() => {
-            setPage("menu");
+            setPage("tableSelection");
             fetchCategories();
           }}
           className="px-4 py-2 bg-text_main  text-main font-bold font-roboto rounded-2xl transition duration-300"

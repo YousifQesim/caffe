@@ -21,7 +21,7 @@ type SelectedItem = {
 
 type OrderContextType = {
     page: 'welcome' | 'tableSelection' | 'menu';
-    setPage: React.Dispatch<React.SetStateAction<'welcome' | 'menu'>>;
+    setPage: React.Dispatch<React.SetStateAction<'welcome' | 'tableSelection'|'menu'>>;
     tableNumber: number | null;
     setTableNumber: React.Dispatch<React.SetStateAction<number | null>>;
     isModalOpen: boolean;
@@ -40,7 +40,7 @@ type OrderContextType = {
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
 export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [page, setPage] = useState<'welcome'| 'menu'>('welcome');
+    const [page, setPage] = useState<'welcome'| 'tableSelection'|'menu'>('welcome');
     const [tableNumber, setTableNumber] = useState<number | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 

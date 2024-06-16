@@ -2,6 +2,7 @@
 import { useOrder } from "../context/OrderContext";
 import Welcome from "../components/Welcome";
 import Menu from "../components/Menu";
+import TableSelection from "../components/TableSelection";
 
 
 export default function WelcomePage() {
@@ -14,7 +15,10 @@ export default function WelcomePage() {
         return <Menu />;
       }
     
-  
+      if (page === "tableSelection") {
+        return <TableSelection />;
+      }
+    
 }
 
 
