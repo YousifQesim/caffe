@@ -1,6 +1,6 @@
 
 import { useOrder } from '../context/OrderContext'; 
-import { FaShoppingCart } from 'react-icons/fa'; 
+import { FaShoppingCart,FaTimes } from 'react-icons/fa'; 
 import Modal from 'react-modal'; 
 import axios from 'axios';
 export default function Menu() {
@@ -57,26 +57,57 @@ const handleSubmitOrder = () => {
                         </span>
                     )}
                 </button>
+<Modal 
+    isOpen={isModalOpen} 
+    onRequestClose={toggleModal} 
+    contentLabel="Selected Items" 
+    className="modal border" 
+    overlayClassName="modal-overlay"
+>
+    <div className="p-16 bg-main text-white absolute top-1/3 right-1/3 rounded-xl">
+        <h2 className="text-xl font-bold mb-4 text-center">Selected Items</h2>
+        <button onClick={toggleModal} className='absolute top-2 right-2'>
+            <FaTimes size={24} />
+        </button>
+        {selectedItems.length === 0 ? (
+            <p>No items selected.</p>
+        ) : (
+            selectedItems.map((selectedItem, index) => (
+                <table className="min-w-full table-fixed">
+                    <tbody className="divide-y w-full">
+                        <tr key={index}>
+                            <td className="py-4 text-left max-w-36 whitespace-nowrap text-sm font-medium text-gray-900">
+                                {selectedItem.item.name} - {selectedItem.item.price} IQD
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-center flex justify-center text-sm text-gray-500">
+                                <input
+                                    type="number"
+                                    value={selectedItem.quantity}
+                                    onChange={(e) => changeQuantity(selectedItem.item.id, parseInt(e.target.value))}
+                                    className="w-16 p-2 text-cat border rounded-lg"
+                                />
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <button
+                                    onClick={() => removeItem(selectedItem.item.id)}
+                                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 transition duration-300"
+                                >
+                                    Remove
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            ))
+        )}
+        {selectedItems.length > 0 && (
+            <div className='flex justify-center'>
+                <button onClick={handleSubmitOrder} className="px-4 py-2 bg-category_back text-white rounded-lg transition duration-300">Submit Order</button>
+            </div>
+        )}
+    </div>
+</Modal>
 
-                <Modal isOpen={isModalOpen} onRequestClose={toggleModal} contentLabel="Selected Items" className="modal border border-green-400 " overlayClassName="modal-overlay" >
-                    <div className="p-16 bg-main text-white absolute top-1/3 right-1/3 rounded-xl">
-                        <h2 className="text-xl font-bold mb-4">Selected Items</h2>
-                        {selectedItems.length === 0 ? (
-                            <p>No items selected.</p>
-                        ) : (
-                            selectedItems.map((selectedItem, index) => (
-                                <div key={index} className="flex items-center space-x-4 mb-4">
-                                    <p className="text-lg">{selectedItem.item.name} - {selectedItem.item.price} IQD</p>
-                                    <input type="number" value={selectedItem.quantity} onChange={(e) => changeQuantity(selectedItem.item.id, parseInt(e.target.value))} className="w-16 p-2 border rounded-lg" />
-                                    <button onClick={() => removeItem(selectedItem.item.id)} className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 transition duration-300">Remove</button>
-                                </div>
-                            ))
-                        )}
-                        {selectedItems.length > 0 && (
-                            <button onClick={handleSubmitOrder} className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition duration-300">Submit Order</button>
-                        )}
-                    </div>
-                </Modal>
             </div>
     </div>
   )
