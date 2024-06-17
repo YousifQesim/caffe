@@ -22,6 +22,8 @@ type SelectedItem = {
 type OrderContextType = {
     page: 'welcome' | 'tableSelection' | 'menu';
     setPage: React.Dispatch<React.SetStateAction<'welcome' | 'tableSelection'|'menu'>>;
+    view: "addItems" | "viewOrders"|"editCategory"|"editItems";
+    setView: React.Dispatch<React.SetStateAction<"addItems" | "viewOrders"|"editCategory"|"editItems">>;
     tableNumber: number | null;
     setTableNumber: React.Dispatch<React.SetStateAction<number | null>>;
     isModalOpen: boolean;
@@ -41,6 +43,7 @@ const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
 export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [page, setPage] = useState<'welcome'| 'tableSelection'|'menu'>('welcome');
+    const [view, setView] = useState<"addItems" | "viewOrders"|"editCategory"|"editItems">("addItems");
     const [tableNumber, setTableNumber] = useState<number | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -96,7 +99,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
 
     return (
-        <OrderContext.Provider value={{ page, setPage, tableNumber, setTableNumber, isModalOpen, setIsModalOpen, categories, items, selectedItems, fetchCategories, fetchItems, addItem, changeQuantity, removeItem, clearSelectedItems }}>
+        <OrderContext.Provider value={{ page, setPage,view,setView, tableNumber, setTableNumber, isModalOpen, setIsModalOpen, categories, items, selectedItems, fetchCategories, fetchItems, addItem, changeQuantity, removeItem, clearSelectedItems }}>
             {children}
         </OrderContext.Provider>
     );
