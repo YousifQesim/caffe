@@ -9,11 +9,12 @@ import Order from "../../interfaces/OrderProps";
 const ViewOrders: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
 
-  const { fetchCategories, view } = useOrder();
+  const { fetchCategories, view,selectedItems } = useOrder();
 
   useEffect(() => {
     fetchCategories();
     fetchOrders();
+    console.log(orders)
   }, []);
 
   const fetchOrders = () => {
@@ -62,12 +63,13 @@ const ViewOrders: React.FC = () => {
                   >
                     <td className="border px-4 py-2">{order.tableNumber}</td>
                     <td className="border px-4 py-2">
-                      {order.items.map((item: OrderItem) => (
-                        <p key={`${order.id}-${item.id}`}>
-                          {item.name} x {item.quantity}
-                        </p>
-                      ))}
+                    {order.items.map((item: OrderItem) => (
+                      <p key={`${order.id}-${item.id}`}>{item.toString()}</p>
+                   
+                    ))}
+                   
                     </td>
+
                     <td className="border px-4 py-2">{order.totalPrice} IQD</td>
                     <td className="border px-4 py-2">
                       {order.accepted ? "Accepted" : "Pending"}
