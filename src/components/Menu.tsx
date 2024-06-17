@@ -5,6 +5,7 @@ import Modal from 'react-modal';
 import axios from 'axios';
 export default function Menu() {
   const { categories, items, selectedItems,  addItem, changeQuantity, removeItem,fetchItems ,setIsModalOpen,isModalOpen,tableNumber,clearSelectedItems} = useOrder();
+ console.log(items.length);
   const handleCategoryClick = (categoryId: number) => {
     fetchItems(categoryId); // Ensure fetchItems is called when selecting a category
   };

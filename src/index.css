@@ -56,7 +56,7 @@ body{
   width: 100%; 
   height: 100vh; /* Or set to desired height */
   background: #221518; /* Base color, adjust as needed */
-  overflow: hidden; /* Hide overflow from the pseudo-element */
+ 
   position: relative; /* For positioning the pseudo-element */
 }
 

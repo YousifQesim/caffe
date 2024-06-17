@@ -6,7 +6,9 @@ import { OrderProvider } from './context/OrderContext';
 
 const App: React.FC = () => {
   return (
-    <OrderProvider>
+    <div className='min-h-screen overflow-auto'>
+
+    <OrderProvider >
       <Router>
         <Routes>
           <Route path="/" element={<WelcomePage />} />
@@ -14,6 +16,7 @@ const App: React.FC = () => {
         </Routes>
       </Router>
     </OrderProvider>
+    </div>
   );
 };
 
