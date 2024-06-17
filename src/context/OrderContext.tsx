@@ -1,23 +1,8 @@
 import React, { createContext, useContext, useState } from 'react';
 import axios from 'axios';
-
-type Category = {
-    id: number;
-    name: string;
-};
-
-type Item = {
-    id: number;
-    category_id: number;
-    name: string;
-    price: number;
-    image_url: string;
-};
-
-type SelectedItem = {
-    item: Item;
-    quantity: number;
-};
+import Category from '../interfaces/CategoryProps';
+import Item from '../interfaces/ItemProps';
+import SelectedItem from '../interfaces/SelectedItems';
 
 type OrderContextType = {
     page: 'welcome' | 'tableSelection' | 'menu';
