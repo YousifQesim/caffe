@@ -46,7 +46,9 @@ export default function Menu() {
 
   return (
     <div className="min-h-screen p-4 relative w-full">
+
       <h1 className="text-2xl font-bold mb-4 text-white text-center my-4">Menu</h1>
+        <div className='mt-24'>
       <img
         className="absolute top-5 left-0"
         src="/src/assets/Haus.png"
@@ -159,6 +161,8 @@ export default function Menu() {
           )}
         </div>
       </Modal>
+      </div>
+
     </div>
   );
 }
