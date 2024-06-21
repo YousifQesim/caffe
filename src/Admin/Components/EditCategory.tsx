@@ -9,7 +9,7 @@ import Order from "../../interfaces/OrderProps";
 
 const EditCategory: React.FC = () => {
   const [updateCategoryName, setUpdateCategoryName] = useState("");
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [, setOrders] = useState<Order[]>([]);
 
   const { fetchCategories, categories, view } = useOrder();
 

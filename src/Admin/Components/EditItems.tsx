@@ -9,7 +9,7 @@ const EditItems: React.FC = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
     null
   );
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [, setOrders] = useState<Order[]>([]);
 
   const { fetchCategories, categories, fetchItems, items, view } = useOrder();
 
@@ -29,7 +29,7 @@ const EditItems: React.FC = () => {
 
   const handleEditItem = (
     event: React.FormEvent<HTMLFormElement>,
-    itemId: number
+    editItemId: number
   ) => {
     event.preventDefault();
 
