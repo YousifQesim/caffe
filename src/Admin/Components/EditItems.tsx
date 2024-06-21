@@ -60,9 +60,10 @@ const EditItems: React.FC = () => {
   };
 
   return (
-    <div>
+    <div  >
       {view === "editItems" && (
-        <div className="bg-category_back rounded-xl flex flex-col w-full md:w-1/3 shadow-lg">
+    <div className="w-full h-screen flex justify-center items-center ">
+        <div className="bg-category_back rounded-xl flex flex-col w-full md:w-2/3 lg:w-1/3 shadow-lg">
           <h2 className="font-bold text-center text-white text-2xl mt-4">
             Edit Item
           </h2>
@@ -86,45 +87,49 @@ const EditItems: React.FC = () => {
           {selectedCategoryId !== null && (
             <div className="p-4">
               {items.length > 0 ? (
-                <table className="w-full mt-4">
-                  <thead>
-                    <tr>
-                      <th className="text-white">Name</th>
-                      <th className="text-white">Price</th>
-                      <th className="text-white">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {items.map((item: any) => (
-                      <tr key={item.id}>
-                        <td className="text-white">{item.name}</td>
-                        <td className="text-white">{item.price}</td>
-                        <td className="text-white flex justify-between">
-                          <button
-                            onClick={() => {
-                              setEditItemId(item.id);
-                              setNewItemName(item.name);
-                              setNewItemPrice(item.price);
-                            }}
-                            className="bg-blue-500 text-white font-bold py-2 px-4 rounded"
-                          >
-                            Edit
-                          </button>
-                          <button
-                            onClick={() => handleRemoveItem(item.id)}
-                            className="bg-red-500 text-white font-bold py-2 px-4 rounded"
-                          >
-                            Remove
-                          </button>
-                        </td>
+                <div className="overflow-x-auto">
+                  <table className="w-full mt-4 table-auto">
+                    <thead>
+                      <tr>
+                        <th className="text-white px-2 py-2">Name</th>
+                        <th className="text-white px-2 py-2">Price</th>
+                        <th className="text-white px-2 py-2">Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {items.map((item: any) => (
+                        <tr key={item.id}>
+                          <td className="border px-2 py-2 text-white">
+                            {item.name}
+                          </td>
+                          <td className="border px-2 py-2 text-white">
+                            {item.price}
+                          </td>
+                          <td className="border px-2 py-2 text-white flex justify-between">
+                            <button
+                              onClick={() => {
+                                setEditItemId(item.id);
+                                setNewItemName(item.name);
+                                setNewItemPrice(item.price);
+                              }}
+                              className="bg-blue-500 text-white font-bold py-1 px-3 rounded flex flex-wrap"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => handleRemoveItem(item.id)}
+                              className="bg-red-500 text-white font-bold py-1 px-3 rounded"
+                            >
+                              Remove
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               ) : (
-                <p className="text-white mt-4">
-                  No items found for this category
-                </p>
+                <p className="text-white mt-4">No items found for this category</p>
               )}
 
               {editItemId !== null && (
@@ -137,21 +142,19 @@ const EditItems: React.FC = () => {
                     placeholder="Item Name"
                     value={newItemName}
                     onChange={(e) => setNewItemName(e.target.value)}
-                    className="border rounded-md px-3 py-2 mt-2 focus:outline-none focus:border-main placeholder-main"
+                    className="border rounded-md px-3 py-2 mt-2 focus:outline-none focus:border-main placeholder-main w-full"
                   />
                   <input
                     type="number"
                     placeholder="Item Price"
                     value={newItemPrice}
-                    onChange={(e) =>
-                      setNewItemPrice(parseFloat(e.target.value))
-                    }
+                    onChange={(e) => setNewItemPrice(parseFloat(e.target.value))}
                     className="border rounded-md px-3 py-2 mt-2 focus:outline-none focus:border-main placeholder-main"
                   />
-                  <div className="flex justify-center">
+                  <div className="flex justify-center mt-4">
                     <button
                       type="submit"
-                      className="bg-main text-white font-bold py-4 w-48 mt-4 rounded-xl"
+                      className="bg-main text-white font-bold py-2 px-4 rounded"
                     >
                       Update Item
                     </button>
@@ -159,7 +162,9 @@ const EditItems: React.FC = () => {
                 </form>
               )}
             </div>
+            
           )}
+        </div>
         </div>
       )}
     </div>

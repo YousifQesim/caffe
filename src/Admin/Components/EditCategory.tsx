@@ -54,8 +54,9 @@ const EditCategory: React.FC = () => {
   };
 
   return (
-    <div>
+    <div  >
       {view === "editCategory" && (
+    <div  className="w-full  flex justify-center h-screen items-center ">
         <div className="bg-category_back rounded-xl flex flex-col w-full md:w-1/3 shadow-lg">
           <h2 className="font-bold text-center text-white text-2xl mt-4">
             Update/Delete Category
@@ -91,6 +92,8 @@ const EditCategory: React.FC = () => {
             </form>
           ))}
         </div>
+        </div>
+        
       )}
     </div>
   );

@@ -62,9 +62,9 @@ export default function AddCategoryItems() {
   };
 
   return (
-    <div>
-      {view === "addItems" && (
-        <div className="flex justify-center items-center gap-8 flex-wrap min-h-screen w-full">
+<div className="flex flex-col md:flex-row justify-center items-center gap-8 flex-wrap w-full">
+{view === "addItems" && (
+        <div className="flex justify-center items-center gap-8 flex-wrap min-h-screen w-full ">
           <div className="bg-category_back rounded-xl flex flex-col w-full md:w-1/3 shadow-lg">
             <h2 className="font-bold text-center text-white text-2xl mt-4">
               Add Category
