@@ -10,7 +10,7 @@ export default function Welcome() {
         src="/src/assets/Haus.png"
         alt="Haus caffe"
       />
-      <div className="text-center flex flex-col items-center justify-center  h-screen xl:h-auto mt-6 w-full xl:w-1/2 xl:absolute xl:top-1/3 xl:mt-0 border p-4 xl:p-0">
+      <div className="text-center flex flex-col items-center justify-center  h-screen xl:h-auto mt-6 w-full xl:w-1/2 xl:absolute xl:top-1/3 xl:mt-0  p-4 xl:p-0">
         <h1 className="text-4xl md:text-5xl font-bold text-white">
           <span className="text-main font-dancing">KAFFEE HAUS</span>
         </h1>
@@ -20,7 +20,7 @@ export default function Welcome() {
         </pre>
         <button
           onClick={() => {
-            setPage("tableSelection");
+            setPage("menu");
             fetchCategories();
           }}
           className="px-4 py-2 bg-text_main text-main font-bold font-roboto rounded-2xl transition duration-300 hover:bg-main hover:text-text_main"
