@@ -34,7 +34,7 @@ export default function Welcome() {
           src="/src/assets/HERO.png"
           alt="Haus caffe"
           height={screen.height}
-          width={screen.width/1.8}
+          width={screen.width/1.6}
         />
       </div>
     </div>

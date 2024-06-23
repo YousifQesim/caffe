@@ -15,6 +15,7 @@ const EditItems: React.FC = () => {
 
   const [editItemId, setEditItemId] = useState<number | null>(null);
 
+
   useEffect(() => {
     fetchCategories();
     fetchOrders();
@@ -60,7 +61,7 @@ const EditItems: React.FC = () => {
   };
 
   return (
-    <div  >
+    <div >
       {view === "editItems" && (
     <div className="w-full h-screen flex justify-center items-center ">
         <div className="bg-category_back rounded-xl flex flex-col w-full md:w-2/3 lg:w-1/3 shadow-lg">
@@ -77,7 +78,7 @@ const EditItems: React.FC = () => {
             className="border rounded-md px-3 py-2 mt-2 focus:outline-none focus:border-main text-main"
           >
             <option value="">Select Category</option>
-            {categories.map((category: any) => (
+            {categories.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.name}
               </option>
@@ -162,12 +163,12 @@ const EditItems: React.FC = () => {
                 </form>
               )}
             </div>
-            
           )}
         </div>
         </div>
       )}
     </div>
+    
   );
 };
 

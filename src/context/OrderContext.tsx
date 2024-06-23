@@ -3,7 +3,7 @@ import axios from 'axios';
 import Category from '../interfaces/CategoryProps';
 import Item from '../interfaces/ItemProps';
 import SelectedItem from '../interfaces/SelectedItems';
-
+import Order from "../interfaces/OrderProps";
 type OrderContextType = {
     page: 'welcome' | 'tableSelection' | 'menu';
     setPage: React.Dispatch<React.SetStateAction<'welcome' | 'tableSelection'|'menu'>>;
@@ -22,6 +22,12 @@ type OrderContextType = {
     changeQuantity: (itemId: number, newQuantity: number) => void;
     removeItem: (itemId: number) => void;
     clearSelectedItems: () => void;
+    orders: Order[];
+    setOrders: React.Dispatch<React.SetStateAction<Order[]>>;
+    fetchOrders: () => void;
+    selectedCategory: number|null ;
+    setSelectedCategory: React.Dispatch<React.SetStateAction<number | null>>;
+    handleCategoryClick: (categoryId:number) => number | null;
 };
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
@@ -31,11 +37,16 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const [view, setView] = useState<"addItems" | "viewOrders"|"editCategory"|"editItems">("addItems");
     const [tableNumber, setTableNumber] = useState<number | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
+    const [orders, setOrders] = useState<Order[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [items, setItems] = useState<Item[]>([]);
     const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
+
+
+
+    
     const fetchCategories = () => {
         axios.get('http://localhost:3000/api/categories')
             .then(response => {
@@ -49,6 +60,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
 
     const fetchItems = (categoryId: number) => {
+        
         axios.get(`http://localhost:3000/api/items/${categoryId}`)
             .then(response => setItems(response.data))
             .catch(error => console.error('Error fetching items:', error));
@@ -82,9 +94,19 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const clearSelectedItems = () => {
         setSelectedItems([]);
     };
+    const fetchOrders = () => {
+        axios
+          .get("http://localhost:3000/api/orders")
+          .then((response) => setOrders(response.data))
+          .catch((error) => console.error("Error fetching orders:", error));
+      };
+      const handleCategoryClick = (categoryId:number) => {
+        categories?.find(category => category.id === categoryId);
+       return categoryId
+   };
 
     return (
-        <OrderContext.Provider value={{ page, setPage,view,setView, tableNumber, setTableNumber, isModalOpen, setIsModalOpen, categories, items, selectedItems, fetchCategories, fetchItems, addItem, changeQuantity, removeItem, clearSelectedItems }}>
+        <OrderContext.Provider value={{ handleCategoryClick,page, setPage,view,setView,orders,setOrders, tableNumber, setTableNumber, isModalOpen, setIsModalOpen, categories, items, selectedItems, fetchCategories, fetchItems, addItem, changeQuantity, removeItem, clearSelectedItems,fetchOrders,selectedCategory,setSelectedCategory }}>
             {children}
         </OrderContext.Provider>
     );

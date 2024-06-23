@@ -1,26 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, {  useEffect } from "react";
 import axios from "axios";
 import { useOrder } from "../../context/OrderContext";
 
 import OrderItem from "../../interfaces/OrderItemProps";
-import Order from "../../interfaces/OrderProps";
+
 
 const ViewOrders: React.FC = () => {
-  const [orders, setOrders] = useState<Order[]>([]);
+  
 
-  const { fetchCategories, view } = useOrder();
+  const { fetchCategories, view,orders,fetchOrders } = useOrder();
 
   useEffect(() => {
     fetchCategories();
     fetchOrders();
   }, []);
-
-  const fetchOrders = () => {
-    axios
-      .get("http://localhost:3000/api/orders")
-      .then((response) => setOrders(response.data))
-      .catch((error) => console.error("Error fetching orders:", error));
-  };
+  
+  console.log(orders)
 
   const handleAcceptOrder = (orderId: number) => {
     axios
