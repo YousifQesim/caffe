@@ -1,7 +1,8 @@
 import { useOrder } from "../context/OrderContext"; // Import context
+import Categories from "./categories/categories";
 
 export default function Welcome() {
-  const { setPage, fetchCategories } = useOrder();
+  const { setPage } = useOrder();
 
   return (
     <div className="h-screen relative flex flex-col  ">
@@ -21,7 +22,7 @@ export default function Welcome() {
         <button
           onClick={() => {
             setPage("menu");
-            fetchCategories();
+            Categories();
           }}
           className="px-4 py-2 bg-text_main text-main font-bold font-roboto rounded-2xl transition duration-300 hover:bg-main hover:text-text_main"
         >

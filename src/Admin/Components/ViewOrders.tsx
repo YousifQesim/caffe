@@ -4,28 +4,20 @@ import { useOrder } from "../../context/OrderContext";
 import Order from "../../components/orders/Order";
 
 
-
-
 const ViewOrders: React.FC = () => {
-  
-
-  const { fetchCategories, view,fetchOrders } = useOrder();
+  const { fetchCategories, view, fetchOrders } = useOrder();
 
   useEffect(() => {
     fetchCategories();
     fetchOrders();
   }, []);
-  
- 
-
- 
 
   return (
     <div>
       {view === "viewOrders" && (
-        <div className="mt-16 overflow-x-auto">
-          <div className="w-full">
-            <table className="table-auto min-w-full divide-y divide-gray-200">
+        <div className="mt-16 overflow-hidden">
+          <div className="">
+            <table className="table-auto  divide-y divide-gray-200 w-full">
               <thead className="bg-thmain text-white">
                 <tr>
                   <th className="px-2 md:px-4 py-2">Table Number</th>
@@ -35,8 +27,8 @@ const ViewOrders: React.FC = () => {
                   <th className="px-2 md:px-4 py-2">Actions</th>
                 </tr>
               </thead>
-              <tbody className=" ">
-               <Order/>
+              <tbody>
+                <Order />
               </tbody>
             </table>
           </div>
