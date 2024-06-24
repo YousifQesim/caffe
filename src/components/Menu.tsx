@@ -1,5 +1,5 @@
 import { useOrder } from '../context/OrderContext'; 
-import { FaShoppingCart, FaTimes } from 'react-icons/fa'; 
+import { FaShoppingCart } from 'react-icons/fa'; 
 import { useEffect } from 'react';
 import Categories from '../components/categories/categories';
 import Items from '../components/items/Items'

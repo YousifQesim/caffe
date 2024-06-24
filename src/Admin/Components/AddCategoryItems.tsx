@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useOrder } from "../../context/OrderContext";
-
+import  Items  from "../../components/items/Items";
 export default function AddCategoryItems() {
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newItemName, setNewItemName] = useState("");
   const [newItemPrice, setNewItemPrice] = useState<number>(0);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
-    null
-  );
   const [selectedItemImage, setSelectedItemImage] = useState<File | null>(null);
 
-  const { fetchCategories, categories, fetchItems, view } = useOrder();
+  const { fetchCategories, categories, view,selectedCategory} = useOrder();
 
   useEffect(() => {
     fetchCategories();
@@ -36,7 +33,7 @@ export default function AddCategoryItems() {
   const handleAddItem = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (selectedCategoryId === null) {
+    if (selectedCategory === null) {
       console.error("Please select a category");
       return;
     }
@@ -47,7 +44,7 @@ export default function AddCategoryItems() {
     formData.append("image", selectedItemImage as Blob);
 
     axios
-      .post(`http://localhost:3000/api/items/${selectedCategoryId}`, formData, {
+      .post(`http://localhost:3000/api/items/${selectedCategory}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -56,7 +53,7 @@ export default function AddCategoryItems() {
         setNewItemName("");
         setNewItemPrice(0);
         setSelectedItemImage(null);
-        fetchItems(selectedCategoryId);
+        <Items categoryId={selectedCategory} />
       })
       .catch((error) => console.error("Error adding item:", error));
   };
@@ -101,8 +98,8 @@ export default function AddCategoryItems() {
                 required
                 onChange={(e) => {
                   const categoryId = parseInt(e.target.value);
-                  setSelectedCategoryId(categoryId);
-                  fetchItems(categoryId);
+             <Items categoryId={categoryId} />
+                  
                 }}
                 className="border rounded-md px-3 py-2 mt-2 focus:outline-none focus:border-main text-main"
               >

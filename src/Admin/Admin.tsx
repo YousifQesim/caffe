@@ -1,7 +1,7 @@
 import React from "react";
 import AddCategoryItems from "./Components/AddCategoryItems";
 import EditCategory from "./Components/EditCategory";
-import EditItems from "./Components/EditItems";
+// import EditItems from "./Components/EditItems";
 import ViewOrders from "./Components/ViewOrders";
 import AdminNavbar from "./Components/AdminNavbar";
 
@@ -28,7 +28,7 @@ const Admin: React.FC = () => {
       </div>
 
       <div>
-        <EditItems />
+        {/* <EditItems /> */}
       </div>
 
       <div>
