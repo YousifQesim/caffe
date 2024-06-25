@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useOrder } from "../../context/OrderContext";
 import api from "../../utilities/getServer";
 import { useFormik } from "formik";
@@ -52,6 +52,12 @@ export default function AddCategoryItems() {
         .catch(error => console.error("Error adding item:", error));
     }
   });
+  const MapThroughCategories=useMemo(()=>
+     categories.map((category: any) => (
+    <option key={category.id} value={category.id}>
+      {category.name}
+    </option>
+  )),[categories])
 
   
   return (
@@ -101,11 +107,7 @@ export default function AddCategoryItems() {
                 className="border rounded-md px-3 py-2 mt-2 focus:outline-none focus:border-main text-main"
               >
                 <option value="">Select Category</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
+                {MapThroughCategories}
               </select>
               <input
                 type="text"
