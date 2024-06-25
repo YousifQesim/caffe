@@ -76,7 +76,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({
         })
         .then((response) => response.json())
         .then((data) => setItems(data));
-        console.log(items);
+       
   };
 
   const clearSelectedItems = () => {

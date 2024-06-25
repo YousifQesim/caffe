@@ -51,7 +51,7 @@ export default function modal() {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log("Order updated:", data);
+     
           clearSelectedItems();
           setIsModalOpen(false);
         })
@@ -66,7 +66,6 @@ export default function modal() {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log("Order submitted:", data);
           clearSelectedItems();
           setIsModalOpen(false);
         })

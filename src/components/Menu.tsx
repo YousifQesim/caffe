@@ -7,13 +7,12 @@ import Items from "./items/Items";
 
 export default function Menu() {
   const {
-    selectedCategory,
     selectedItems,
     setIsModalOpen,
     isModalOpen,
     
   } = useOrder();
-console.log(selectedCategory)
+
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);

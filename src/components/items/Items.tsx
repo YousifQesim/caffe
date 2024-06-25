@@ -3,8 +3,7 @@ import { useOrder } from "../../context/OrderContext";
 
 export default function Items() {
   const { addItem,items } = useOrder();
-console.log(items)
- 
+
   const renderitemCards = () => {
     return items.map((item) => (
       <div
