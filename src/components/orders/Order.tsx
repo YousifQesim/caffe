@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useMemo } from 'react';
 import OrderItem from "../../interfaces/OrderItemProps";
 import api from "../../utilities/getServer";
 import { useOrder } from "../../context/OrderContext";
@@ -26,14 +26,13 @@ export default function Order() {
   }, [setOrders]);
 
   const handleAcceptOrder = useCallback((orderId: number) => {
-    api(`/orders/${orderId}/accept`, {
+    api(`/orders/${orderId}/accept`, {  
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       }
     }).then(response => {
       if (response.ok) {
-        // Optionally, update the order status in the state
         setOrders(prevOrders => prevOrders.map(order => 
           order.id === orderId ? { ...order, accepted: true } : order
         ));
@@ -43,8 +42,8 @@ export default function Order() {
     });
   }, [setOrders]);
 
-  const RenderOrderItems = () => {
-    return orders?.map((order) => (
+  const renderedOrders = useMemo(() => {
+    return orders.map(order => (
       <tr
         key={order.id}
         className={`${order.accepted ? "bg-green-300" : "bg-red-300"} `}
@@ -70,7 +69,6 @@ export default function Order() {
               Accept
             </button>
           )}
-
           <button
             onClick={() => handleRemoveOrder(order.id)}
             className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded focus:outline-none focus:shadow-outline"
@@ -80,11 +78,10 @@ export default function Order() {
         </td>
       </tr>
     ));
-  };
-
+  }, [orders, handleAcceptOrder, handleRemoveOrder]);
   return (
     <>
-        {RenderOrderItems()}
+        {renderedOrders}
     </>
     
   );

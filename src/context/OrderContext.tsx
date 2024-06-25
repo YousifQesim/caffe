@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useCallback, useContext, useState } from "react";
 import Category from "../interfaces/CategoryProps";
 import Item from "../interfaces/ItemProps";
 import SelectedItem from "../interfaces/SelectedItems";
@@ -79,39 +79,6 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({
         console.log(items);
   };
 
-  const addItem = (item: Item) => {
-    const existingItem = selectedItems.find(
-      (selectedItem) => selectedItem.item.id === item.id
-    );
-
-    if (existingItem) {
-      const updatedItems = selectedItems.map((selectedItem) =>
-        selectedItem.item.id === item.id
-          ? { ...selectedItem, quantity: selectedItem.quantity + 1 }
-          : selectedItem
-      );
-      setSelectedItems(updatedItems);
-    } else {
-      setSelectedItems([...selectedItems, { item, quantity: 1 }]);
-    }
-  };
-
-  const changeQuantity = (itemId: number, newQuantity: number) => {
-    const updatedItems = selectedItems.map((selectedItem) =>
-      selectedItem.item.id === itemId
-        ? { ...selectedItem, quantity: newQuantity }
-        : selectedItem
-    );
-    setSelectedItems(updatedItems);
-  };
-
-  const removeItem = (itemId: number) => {
-    const updatedItems = selectedItems.filter(
-      (selectedItem) => selectedItem.item.id !== itemId
-    );
-    setSelectedItems(updatedItems);
-  };
-
   const clearSelectedItems = () => {
     setSelectedItems([]);
   };
@@ -126,10 +93,40 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({
       .then((data) => setOrders(data));
   
   };
-  const handleCategoryClick = (categoryId: number) => {
+
+  const addItem = useCallback((item: Item) => {
+    setSelectedItems(prevItems => {
+      const existingItem = prevItems.find(selectedItem => selectedItem.item.id === item.id);
+      if (existingItem) {
+        return prevItems.map(selectedItem =>
+          selectedItem.item.id === item.id
+            ? { ...selectedItem, quantity: selectedItem.quantity + 1 }
+            : selectedItem
+        );
+      } else {
+        return [...prevItems, { item, quantity: 1 }];
+      }
+    });
+  }, []);
+
+  const changeQuantity = useCallback((itemId: number, newQuantity: number) => {
+    setSelectedItems(prevItems =>
+      prevItems.map(selectedItem =>
+        selectedItem.item.id === itemId ? { ...selectedItem, quantity: newQuantity } : selectedItem
+      )
+    );
+  }, []);
+
+  const removeItem = useCallback((itemId: number) => {
+    setSelectedItems(prevItems => prevItems.filter(selectedItem => selectedItem.item.id !== itemId));
+  }, []);
+
+
+  const handleCategoryClick = useCallback((categoryId: number) => {
     categories?.find((category) => category.id === categoryId);
     return categoryId;
-  };
+  }, []);
+ 
 
   return (
     <OrderContext.Provider
