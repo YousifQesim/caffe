@@ -3,7 +3,7 @@ import { useOrder } from "../../context/OrderContext";
 import { IoMdMenu } from "react-icons/io";
 import { IoCloseSharp } from "react-icons/io5";
 export default function AdminNavbar() {
-  const { setView,fetchOrders } = useOrder();
+  const { setView } = useOrder();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (

@@ -1,4 +1,4 @@
-import React, {  useEffect } from "react";
+import React from "react";
 
 import { useOrder } from "../../context/OrderContext";
 import Order from "../../components/orders/Order";

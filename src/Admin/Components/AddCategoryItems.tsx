@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import  { useState, useMemo } from "react";
 import { useOrder } from "../../context/OrderContext";
 import api from "../../utilities/getServer";
 import { useFormik } from "formik";
@@ -7,8 +7,8 @@ export default function AddCategoryItems() {
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newItemName, setNewItemName] = useState("");
   const [newItemPrice, setNewItemPrice] = useState<number>(0);
-  const [selectedItemImage, setSelectedItemImage] = useState<File | null>(null);
-  const {  categories,setCategories, view,selectedCategory,setSelectedCategory} = useOrder();
+  const [ ,setSelectedItemImage] = useState<File | null>(null);
+  const {  categories,setCategories, view,setSelectedCategory} = useOrder();
 
 
 
@@ -47,7 +47,9 @@ export default function AddCategoryItems() {
       })
         .then(response => response.json())
         .then(data => {
+          data
           resetForm();
+
         })
         .catch(error => console.error("Error adding item:", error));
     }
