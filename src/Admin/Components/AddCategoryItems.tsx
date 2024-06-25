@@ -4,13 +4,19 @@ import api from "../../utilities/getServer";
 import { useFormik } from "formik";
 import { categorySchema, itemSchema } from "../../validation/ValidationSchemas";
 
+/**
+ * Component for adding categories and items to the order management system.
+ * Uses Formik for form handling and API calls for data manipulation.
+ */
 export default function AddCategoryItems() {
   const { categories, setCategories, view } = useOrder();
 
+  // Formik hook for handling category addition
   const formikCategory = useFormik({
     initialValues: { newCategoryName: "" },
     validationSchema: categorySchema,
     onSubmit: (values, { resetForm }) => {
+      // API call to add new category
       api(`/categories`, {
         method: "POST",
         headers: {
@@ -20,6 +26,7 @@ export default function AddCategoryItems() {
       })
         .then((response) => response.json())
         .then((data) => {
+          // Reset form and update categories state with new data
           resetForm();
           setCategories((prevCategories) => [...prevCategories, data]);
         })
@@ -27,6 +34,7 @@ export default function AddCategoryItems() {
     },
   });
 
+  // Formik hook for handling item addition
   const formikItem = useFormik({
     initialValues: {
       newItemName: "",
@@ -41,18 +49,21 @@ export default function AddCategoryItems() {
       formData.append("price", values.newItemPrice.toString());
       formData.append("image", values.selectedItemImage || "");
 
+      // API call to add new item
       api(`/items/${values.selectedCategory}`, {
         method: "POST",
         body: formData,
       })
         .then((response) => response.json())
         .then((data) => {
+          // Reset form after successful submission
           resetForm();
         })
         .catch((error) => console.error("Error adding item:", error));
     },
   });
 
+  // Memoized list of categories for select dropdown
   const MapThroughCategories = useMemo(
     () =>
       categories.map((category) => (
@@ -63,6 +74,7 @@ export default function AddCategoryItems() {
     [categories]
   );
 
+  // Placeholder function for setSelectedItemImage, if needed in future
   function setSelectedItemImage(arg0: File | null): any {
     throw new Error("Function not implemented.");
   }
@@ -71,6 +83,7 @@ export default function AddCategoryItems() {
     <div className="flex flex-col md:flex-row justify-center items-center gap-8 flex-wrap w-full">
       {view === "addItems" && (
         <div className="flex justify-center items-center gap-8 flex-wrap min-h-screen w-full">
+          {/* Form for adding new category */}
           <div className="bg-category_back rounded-xl flex flex-col w-full md:w-1/3 shadow-lg">
             <h2 className="font-bold text-center text-white text-2xl mt-4">
               Add Category
@@ -105,6 +118,7 @@ export default function AddCategoryItems() {
             </form>
           </div>
 
+          {/* Form for adding new item */}
           <div className="bg-category_back rounded-xl flex flex-col w-full md:w-1/3 shadow-lg">
             <h2 className="font-bold text-center text-white text-2xl mt-4">
               Add Item
