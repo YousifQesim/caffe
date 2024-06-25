@@ -41,7 +41,7 @@ A comprehensive web application for managing Caffe operations, including user au
    cd repository-name
 
 2. **Clone the repository:**
-    ```bash
+  
     npm install
 
 3. **Set up environment variables:**
@@ -49,10 +49,10 @@ A comprehensive web application for managing Caffe operations, including user au
   - Define the environment variable for API URL:
 
  
-     VITE_DEVELOPMENT_API=http://localhost:3000/api
+     * VITE_DEVELOPMENT_API=http://localhost:3000/api
 
 3. **Run Application:**
-  ```bash
+  
   - npm start
   
 ## API Integration
