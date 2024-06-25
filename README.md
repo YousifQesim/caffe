@@ -48,18 +48,13 @@ A comprehensive web application for managing Caffe operations, including user au
   - Create .env file in the root of your project.
   - Define the environment variable for API URL:
 
-   ```bash
+ 
      VITE_DEVELOPMENT_API=http://localhost:3000/api
 
 3. **Run Application:**
   ```bash
   - npm start
   
-
-
-
-
-
 ## API Integration
 
 The frontend communicates with the backend server using RESTful APIs. The `api` utility (`getServer.ts`) manages HTTP requests and includes the base URL configured via environment variables.
