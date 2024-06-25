@@ -7,7 +7,6 @@ A comprehensive web application for managing Caffe operations, including user au
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Setup](#setup)
-- [Folder Structure](#folder-structure)
 - [API Integration](#api-integration)
 - [Validation](#validation)
 - [Contributing](#contributing)
@@ -58,25 +57,7 @@ A comprehensive web application for managing Caffe operations, including user au
   
 
 
-4. **Folder Structure**
 
-  ```bash
-            ├── public/             # Public assets and index.html
-        ├── src/                # Source files
-        │   ├── components/     # React components
-        │   ├── context/        # React context providers and consumers
-        │   ├── hooks/          # Custom hooks
-        │   ├── interfaces/     # TypeScript interfaces
-        │   ├── utilities/      # Utility functions
-        │   ├── validation/     # Validation schemas (Yup)
-        │   ├── views/          # Pages or views
-        │   ├── App.tsx         # Main application component
-        │   ├── index.tsx       # Entry point
-        │   ├── routes.tsx      # React Router routes
-        │   └── ...
-        ├── .env                # Environment variables
-        ├── README.md           # Project documentation
-        └── package.json        # NPM package configuration
 
 
 ## API Integration
