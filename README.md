@@ -42,40 +42,41 @@ A comprehensive web application for managing Caffe operations, including user au
    cd repository-name
 
 2. **Clone the repository:**
+    ```bash
     npm install
 
 3. **Set up environment variables:**
   - Create .env file in the root of your project.
   - Define the environment variable for API URL:
 
-   
-   * VITE_DEVELOPMENT_API=http://localhost:3000/api
+   ```bash
+     VITE_DEVELOPMENT_API=http://localhost:3000/api
 
 3. **Run Application:**
-
+  ```bash
   - npm start
   
 
 
 4. **Folder Structure**
 
-
-    ├── public/             # Public assets and index.html
-├── src/                # Source files
-│   ├── components/     # React components
-│   ├── context/        # React context providers and consumers
-│   ├── hooks/          # Custom hooks
-│   ├── interfaces/     # TypeScript interfaces
-│   ├── utilities/      # Utility functions
-│   ├── validation/     # Validation schemas (Yup)
-│   ├── views/          # Pages or views
-│   ├── App.tsx         # Main application component
-│   ├── index.tsx       # Entry point
-│   ├── routes.tsx      # React Router routes
-│   └── ...
-├── .env                # Environment variables
-├── README.md           # Project documentation
-└── package.json        # NPM package configuration
+  ```bash
+            ├── public/             # Public assets and index.html
+        ├── src/                # Source files
+        │   ├── components/     # React components
+        │   ├── context/        # React context providers and consumers
+        │   ├── hooks/          # Custom hooks
+        │   ├── interfaces/     # TypeScript interfaces
+        │   ├── utilities/      # Utility functions
+        │   ├── validation/     # Validation schemas (Yup)
+        │   ├── views/          # Pages or views
+        │   ├── App.tsx         # Main application component
+        │   ├── index.tsx       # Entry point
+        │   ├── routes.tsx      # React Router routes
+        │   └── ...
+        ├── .env                # Environment variables
+        ├── README.md           # Project documentation
+        └── package.json        # NPM package configuration
 
 
 ## API Integration
