@@ -52,14 +52,14 @@ A comprehensive web application for managing Caffe operations, including user au
    * VITE_DEVELOPMENT_API=http://localhost:3000/api
 
 3. **Run Application:**
-```bash
+
   - npm start
   
 
 
 4. **Folder Structure**
 
-```bash
+
     ├── public/             # Public assets and index.html
 ├── src/                # Source files
 │   ├── components/     # React components
