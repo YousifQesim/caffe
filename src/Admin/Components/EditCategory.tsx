@@ -1,99 +1,110 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useOrder } from "../../context/OrderContext";
+import api from "../../utilities/getServer";
 
-import Order from "../../interfaces/OrderProps";
-
-
-
-
+/**
+ * EditCategory component allows editing and deleting categories.
+ * It fetches categories on mount and provides forms for updating and deleting categories.
+ */
 const EditCategory: React.FC = () => {
   const [updateCategoryName, setUpdateCategoryName] = useState("");
-  const [, setOrders] = useState<Order[]>([]);
 
   const { fetchCategories, categories, view } = useOrder();
 
   useEffect(() => {
+    // Fetch categories on component mount
     fetchCategories();
-    fetchOrders();
   }, []);
 
-  const fetchOrders = () => {
-    axios
-      .get("http://localhost:3000/api/orders")
-      .then((response) => setOrders(response.data))
-      .catch((error) => console.error("Error fetching orders:", error));
-  };
+  // Handle update category form submission
+  const handleUpdateCategory = useCallback(
+    (event: React.FormEvent<HTMLFormElement>, categoryId: number) => {
+      event.preventDefault();
 
-  const handleUpdateCategory = (
-    event: React.FormEvent<HTMLFormElement>,
-    categoryId: number
-  ) => {
-    event.preventDefault();
-
-    if (updateCategoryName !== "") {
-      axios
-        .put(`http://localhost:3000/api/categories/${categoryId}`, {
-          name: updateCategoryName,
+      if (updateCategoryName !== "") {
+        // API call to update category
+        api(`/categories/${categoryId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name: updateCategoryName }),
         })
-        .then(() => {
-          setUpdateCategoryName("");
-          fetchCategories();
-        })
-        .catch((error) => console.error("Error updating category:", error));
-    } else {
-      console.error("Please enter a category name");
-    }
-  };
+          .then((response) => response.json())
+          .then(() => {
+            setUpdateCategoryName("");
+            // Refresh categories list after update
+            fetchCategories();
+          })
+          .catch((error) => console.error("Error updating category:", error));
+      } else {
+        console.error("Please enter a category name");
+      }
+    },
+    [updateCategoryName, fetchCategories]
+  );
 
-  const handleDeleteCategory = (categoryId: number) => {
-    axios
-      .delete(`http://localhost:3000/api/categories/${categoryId}`)
-      .then(() => fetchCategories())
-      .catch((error) => console.error("Error deleting category:", error));
-  };
+  // Handle delete category
+  const handleDeleteCategory = useCallback(
+    (categoryId: number) => {
+      // API call to delete category
+      api(`/categories/${categoryId}`, {
+        method: "DELETE",
+      })
+        .then(() => fetchCategories()) // Refresh categories list after deletion
+        .catch((error) => console.error("Error deleting category:", error));
+    },
+    [fetchCategories]
+  );
+
+  // Memoized JSX for mapping through categories and rendering update/delete forms
+  const MapThroughCategory = useMemo(() => {
+    return categories.map((category: any) => (
+      <div key={category.id} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 p-4">
+        <form
+          onSubmit={(e) => handleUpdateCategory(e, category.id)}
+          className="flex flex-col rounded-md justify-center items-center"
+        >
+          <input
+            type="text"
+            placeholder="Category Name"
+            defaultValue={category.name}
+            onChange={(e) => setUpdateCategoryName(e.target.value)}
+            className="border rounded-md px-3 py-2 mt-2 focus:outline-none focus:border-main placeholder-main"
+          />
+          <div className="flex justify-between mt-2 gap-4">
+            <button
+              type="submit"
+              className="bg-blue-500 text-white font-bold py-2 px-4 rounded"
+            >
+              Update
+            </button>
+            <button
+              type="button"
+              onClick={() => handleDeleteCategory(category.id)}
+              className="bg-red-500 text-white font-bold py-2 px-4 rounded"
+            >
+              Delete
+            </button>
+          </div>
+        </form>
+      </div>
+    ));
+  }, [categories, handleUpdateCategory, handleDeleteCategory]);
 
   return (
-    <div  >
+    <div>
       {view === "editCategory" && (
-    <div  className="w-full  flex justify-center h-screen items-center ">
-        <div className="bg-category_back rounded-xl flex flex-col w-full md:w-1/3 shadow-lg">
-          <h2 className="font-bold text-center text-white text-2xl mt-4">
-            Update/Delete Category
-          </h2>
-          {categories.map((category: any) => (
-            <form
-              key={category.id}
-              onSubmit={(e) => handleUpdateCategory(e, category.id)}
-              className="flex flex-col p-4 mb-4"
-            >
-              <input
-                type="text"
-                placeholder="Category Name"
-                defaultValue={category.name}
-                onChange={(e) => setUpdateCategoryName(e.target.value)}
-                className="border rounded-md px-3 py-2 mt-2 focus:outline-none focus:border-main placeholder-main"
-              />
-              <div className="flex justify-between mt-2">
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white font-bold py-2 px-4 rounded"
-                >
-                  Update
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleDeleteCategory(category.id)}
-                  className="bg-red-500 text-white font-bold py-2 px-4 rounded"
-                >
-                  Delete
-                </button>
-              </div>
-            </form>
-          ))}
+        <div className="w-full flex justify-center items-center mt-12">
+          <div className="bg-category_back rounded-xl w-full max-w-6xl shadow-lg">
+            <h2 className="font-bold text-center text-white text-2xl mt-4">
+              Update/Delete Category
+            </h2>
+            <div className="flex flex-wrap justify-center">
+              {MapThroughCategory}
+            </div>
+          </div>
         </div>
-        </div>
-        
       )}
     </div>
   );

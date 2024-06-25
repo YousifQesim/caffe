@@ -1,7 +1,8 @@
 import { useOrder } from "../context/OrderContext"; // Import context
 
+
 export default function Welcome() {
-  const { setPage, fetchCategories } = useOrder();
+  const { setPage,fetchCategories } = useOrder();
 
   return (
     <div className="h-screen relative flex flex-col  ">

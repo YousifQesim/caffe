@@ -1,83 +1,112 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { useMemo } from "react";
 import { useOrder } from "../../context/OrderContext";
-import  Items  from "../../components/items/Items";
+import api from "../../utilities/getServer";
+import { useFormik } from "formik";
+import { categorySchema, itemSchema } from "../../validation/ValidationSchemas";
+
+/**
+ * Component for adding categories and items to the order management system.
+ * Uses Formik for form handling and API calls for data manipulation.
+ */
 export default function AddCategoryItems() {
-  const [newCategoryName, setNewCategoryName] = useState("");
-  const [newItemName, setNewItemName] = useState("");
-  const [newItemPrice, setNewItemPrice] = useState<number>(0);
-  const [selectedItemImage, setSelectedItemImage] = useState<File | null>(null);
+  const { categories, setCategories, view } = useOrder();
 
-  const { fetchCategories, categories, view,selectedCategory} = useOrder();
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  const handleAddCategory = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (newCategoryName !== "") {
-      axios
-        .post("http://localhost:3000/api/categories", { name: newCategoryName })
-        .then(() => {
-          setNewCategoryName("");
-          fetchCategories();
+  // Formik hook for handling category addition
+  const formikCategory = useFormik({
+    initialValues: { newCategoryName: "" },
+    validationSchema: categorySchema,
+    onSubmit: (values, { resetForm }) => {
+      // API call to add new category
+      api(`/categories`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: values.newCategoryName }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // Reset form and update categories state with new data
+          resetForm();
+          setCategories((prevCategories) => [...prevCategories, data]);
         })
         .catch((error) => console.error("Error adding category:", error));
-    } else {
-      console.error("Please enter a category name");
-    }
-  };
+    },
+  });
 
-  const handleAddItem = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  // Formik hook for handling item addition
+  const formikItem = useFormik({
+    initialValues: {
+      newItemName: "",
+      newItemPrice: 0,
+      selectedItemImage: null,
+      selectedCategory: "",
+    },
+    validationSchema: itemSchema,
+    onSubmit: (values, { resetForm }) => {
+      const formData = new FormData();
+      formData.append("name", values.newItemName);
+      formData.append("price", values.newItemPrice.toString());
+      formData.append("image", values.selectedItemImage || "");
 
-    if (selectedCategory === null) {
-      console.error("Please select a category");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("name", newItemName);
-    formData.append("price", newItemPrice.toString());
-    formData.append("image", selectedItemImage as Blob);
-
-    axios
-      .post(`http://localhost:3000/api/items/${selectedCategory}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      // API call to add new item
+      api(`/items/${values.selectedCategory}`, {
+        method: "POST",
+        body: formData,
       })
-      .then(() => {
-        setNewItemName("");
-        setNewItemPrice(0);
-        setSelectedItemImage(null);
-        <Items categoryId={selectedCategory} />
-      })
-      .catch((error) => console.error("Error adding item:", error));
-  };
+        .then((response) => response.json())
+        .then((data) => {
+          // Reset form after successful submission
+          resetForm();
+        })
+        .catch((error) => console.error("Error adding item:", error));
+    },
+  });
+
+  // Memoized list of categories for select dropdown
+  const MapThroughCategories = useMemo(
+    () =>
+      categories.map((category) => (
+        <option key={category.id} value={category.id}>
+          {category.name}
+        </option>
+      )),
+    [categories]
+  );
+
+  // Placeholder function for setSelectedItemImage, if needed in future
+  function setSelectedItemImage(arg0: File | null): any {
+    throw new Error("Function not implemented.");
+  }
 
   return (
-<div className="flex flex-col md:flex-row justify-center items-center gap-8 flex-wrap w-full">
-{view === "addItems" && (
-        <div className="flex justify-center items-center gap-8 flex-wrap min-h-screen w-full ">
+    <div className="flex flex-col md:flex-row justify-center items-center gap-8 flex-wrap w-full">
+      {view === "addItems" && (
+        <div className="flex justify-center items-center gap-8 flex-wrap min-h-screen w-full">
+          {/* Form for adding new category */}
           <div className="bg-category_back rounded-xl flex flex-col w-full md:w-1/3 shadow-lg">
             <h2 className="font-bold text-center text-white text-2xl mt-4">
               Add Category
             </h2>
             <form
-              onSubmit={handleAddCategory}
+              onSubmit={formikCategory.handleSubmit}
               className="w-full flex flex-col p-4"
             >
               <input
                 type="text"
-                required
+                name="newCategoryName"
                 placeholder="New Category Name"
-                value={newCategoryName}
-                onChange={(e) => setNewCategoryName(e.target.value)}
+                value={formikCategory.values.newCategoryName}
+                onChange={formikCategory.handleChange}
+                onBlur={formikCategory.handleBlur}
                 className="border rounded-md px-3 py-2 mt-2 focus:outline-none focus:border-main placeholder-main"
               />
+              {formikCategory.touched.newCategoryName &&
+                formikCategory.errors.newCategoryName && (
+                  <div className="text-red-500 text-sm">
+                    {formikCategory.errors.newCategoryName}
+                  </div>
+                )}
               <div className="flex justify-center">
                 <button
                   type="submit"
@@ -89,50 +118,73 @@ export default function AddCategoryItems() {
             </form>
           </div>
 
+          {/* Form for adding new item */}
           <div className="bg-category_back rounded-xl flex flex-col w-full md:w-1/3 shadow-lg">
             <h2 className="font-bold text-center text-white text-2xl mt-4">
               Add Item
             </h2>
-            <form onSubmit={handleAddItem} className="flex flex-col p-4">
+            <form
+              onSubmit={formikItem.handleSubmit}
+              className="flex flex-col p-4"
+            >
               <select
-                required
-                onChange={(e) => {
-                  const categoryId = parseInt(e.target.value);
-             <Items categoryId={categoryId} />
-                  
-                }}
+                name="selectedCategory"
+                value={formikItem.values.selectedCategory}
+                onChange={formikItem.handleChange}
+                onBlur={formikItem.handleBlur}
                 className="border rounded-md px-3 py-2 mt-2 focus:outline-none focus:border-main text-main"
               >
                 <option value="">Select Category</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
+                {MapThroughCategories}
               </select>
+              {formikItem.touched.selectedCategory &&
+                formikItem.errors.selectedCategory && (
+                  <div className="text-red-500 text-sm">
+                    {formikItem.errors.selectedCategory}
+                  </div>
+                )}
               <input
                 type="text"
+                name="newItemName"
                 placeholder="Item Name"
-                value={newItemName}
-                onChange={(e) => setNewItemName(e.target.value)}
+                value={formikItem.values.newItemName}
+                onChange={formikItem.handleChange}
+                onBlur={formikItem.handleBlur}
                 className="border rounded-md px-3 py-2 mt-2 focus:outline-none focus:border-main placeholder-main"
               />
+              {formikItem.touched.newItemName &&
+                formikItem.errors.newItemName && (
+                  <div className="text-red-500 text-sm">
+                    {formikItem.errors.newItemName}
+                  </div>
+                )}
               <input
                 type="number"
+                name="newItemPrice"
                 placeholder="Item Price"
-                value={newItemPrice}
-                onChange={(e) => setNewItemPrice(parseFloat(e.target.value))}
+                value={formikItem.values.newItemPrice}
+                onChange={formikItem.handleChange}
+                onBlur={formikItem.handleBlur}
                 className="border rounded-md px-3 py-2 mt-2 focus:outline-none focus:border-main placeholder-main"
               />
+              {formikItem.touched.newItemPrice &&
+                formikItem.errors.newItemPrice && (
+                  <div className="text-red-500 text-sm">
+                    {formikItem.errors.newItemPrice}
+                  </div>
+                )}
               <div className="file-input mt-2">
                 <input
                   type="file"
-                  name="file-input"
+                  name="selectedItemImage"
                   id="file-input"
                   accept="image/*"
-                  onChange={(e) =>
-                    setSelectedItemImage(e.target.files && e.target.files[0])
-                  }
+                  onChange={(e) => {
+                    const file = e.currentTarget.files?.[0];
+                    if (file) {
+                      formikItem.setFieldValue("selectedItemImage", file);
+                    }
+                  }}
                   className="file-input__input"
                 />
                 <label

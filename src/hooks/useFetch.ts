@@ -1,9 +1,9 @@
+import fetcher from "../utilities/fetcher";
+import useSWR from "swr";
+
 /**
  * useFetch.ts
  */
-
-import fetcher from "../utilities/fetcher";
-import useSWR from "swr";
 
 /**
  * 
@@ -14,7 +14,7 @@ import useSWR from "swr";
  * import useFetch from '@/hooks/useFetch'
  * 
  * // Use inside your component
- * const { data, error, isLoading } = useFetch<T>('/v1/shop/all');
+ * const { data, error, isLoading, refetch } = useFetch<T>('/v1/shop/all');
  * 
  * // If you want to pass Body, it must be in the `options` prop
  * ... = useFetch<T>(endpoint, {
@@ -22,7 +22,7 @@ import useSWR from "swr";
  * })
  */
 const useFetch = <T,>(url: string | null, options?: RequestInit) => {
-  const { data, error, isLoading } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR(
     url,
     () => fetcher<T>(url, options),
     {
@@ -32,7 +32,11 @@ const useFetch = <T,>(url: string | null, options?: RequestInit) => {
     }
   );
 
-  return { data, error, isLoading };
+  const refetch = () => {
+    mutate();
+  };
+
+  return { data, error, isLoading, refetch };
 };
 
 export default useFetch;
