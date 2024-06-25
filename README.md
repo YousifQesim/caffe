@@ -1,30 +1,101 @@
-# React + TypeScript + Vite
+# Caffe Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A comprehensive web application for managing Caffe operations, including user authentication, category and item management, order handling, and more.
 
-Currently, two official plugins are available:
+## Table of Contents
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Setup](#setup)
+- [Folder Structure](#folder-structure)
+- [API Integration](#api-integration)
+- [Validation](#validation)
+- [Contributing](#contributing)
+- [License](#license)
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Authentication**: Secure login using username and password with client-side validation.
+- **Category Management**: CRUD operations for Caffe categories with form validation.
+- **Item Management**: Add, edit, and delete items within categories with detailed validation for item attributes.
+- **Order Management**: View orders placed by customers in real-time.
+- **Responsive Design**: Optimized for various screen sizes to ensure usability on desktop and mobile devices.
+- **API Integration**: Communicates with a backend server for data retrieval and storage.
+- **SWR Integration**: Uses SWR for efficient data fetching and caching.
+- **State Management**: Uses React Context API for managing global state related to orders, categories, and items.
 
-- Configure the top-level `parserOptions` property like this:
+## Technologies Used
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+- **Frontend**: React, TypeScript, Tailwind CSS
+- **Backend Integration**: RESTful APIs with fetch API, SWR for data fetching
+- **Form Validation**: Yup for client-side form validation with detailed error messages.
+- **State Management**: React Context API for managing global state related to orders, categories, and items.
+- **API Communication**: Custom `api` utility for making HTTP requests to the server with centralized base URL configuration.
+- **SWR**: Used for efficient data fetching, caching, and synchronization with server data.
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Setup
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/your/repository.git
+   cd repository-name
+
+2. **Clone the repository:**
+    npm install
+
+3. **Set up environment variables:**
+  - Create .env file in the root of your project.
+  - Define the environment variable for API URL:
+
+   
+   * VITE_DEVELOPMENT_API=http://localhost:3000/api
+
+3. **Run Application:**
+```bash
+  - npm start
+  
+
+
+4. **Folder Structure**
+
+```bash
+    ├── public/             # Public assets and index.html
+├── src/                # Source files
+│   ├── components/     # React components
+│   ├── context/        # React context providers and consumers
+│   ├── hooks/          # Custom hooks
+│   ├── interfaces/     # TypeScript interfaces
+│   ├── utilities/      # Utility functions
+│   ├── validation/     # Validation schemas (Yup)
+│   ├── views/          # Pages or views
+│   ├── App.tsx         # Main application component
+│   ├── index.tsx       # Entry point
+│   ├── routes.tsx      # React Router routes
+│   └── ...
+├── .env                # Environment variables
+├── README.md           # Project documentation
+└── package.json        # NPM package configuration
+
+
+## API Integration
+
+The frontend communicates with the backend server using RESTful APIs. The `api` utility (`getServer.ts`) manages HTTP requests and includes the base URL configured via environment variables.
+
+## Validation
+
+Form validation is handled using Yup schemas (`loginValidationSchema`, `categorySchema`, `itemSchema`) defined in the `validation` folder. These schemas enforce data integrity rules and provide detailed error messages for form inputs.
+
+## Contributing
+
+Contributions are welcome! Here's how you can contribute to the project:
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/your-feature`).
+3. Commit your changes (`git commit -am 'Add some feature'`).
+4. Push to the branch (`git push origin feature/your-feature`).
+5. Create a new Pull Request.
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
