@@ -2,20 +2,27 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useOrder } from "../../context/OrderContext";
 import api from "../../utilities/getServer";
 
+/**
+ * EditCategory component allows editing and deleting categories.
+ * It fetches categories on mount and provides forms for updating and deleting categories.
+ */
 const EditCategory: React.FC = () => {
   const [updateCategoryName, setUpdateCategoryName] = useState("");
 
   const { fetchCategories, categories, view } = useOrder();
 
   useEffect(() => {
+    // Fetch categories on component mount
     fetchCategories();
   }, []);
 
+  // Handle update category form submission
   const handleUpdateCategory = useCallback(
     (event: React.FormEvent<HTMLFormElement>, categoryId: number) => {
       event.preventDefault();
 
       if (updateCategoryName !== "") {
+        // API call to update category
         api(`/categories/${categoryId}`, {
           method: "PUT",
           headers: {
@@ -26,6 +33,7 @@ const EditCategory: React.FC = () => {
           .then((response) => response.json())
           .then(() => {
             setUpdateCategoryName("");
+            // Refresh categories list after update
             fetchCategories();
           })
           .catch((error) => console.error("Error updating category:", error));
@@ -36,17 +44,20 @@ const EditCategory: React.FC = () => {
     [updateCategoryName, fetchCategories]
   );
 
+  // Handle delete category
   const handleDeleteCategory = useCallback(
     (categoryId: number) => {
+      // API call to delete category
       api(`/categories/${categoryId}`, {
         method: "DELETE",
       })
-        .then(() => fetchCategories())
+        .then(() => fetchCategories()) // Refresh categories list after deletion
         .catch((error) => console.error("Error deleting category:", error));
     },
     [fetchCategories]
   );
 
+  // Memoized JSX for mapping through categories and rendering update/delete forms
   const MapThroughCategory = useMemo(() => {
     return categories.map((category: any) => (
       <div key={category.id} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 p-4">
