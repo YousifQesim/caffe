@@ -2,23 +2,19 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
-import * as yup from 'yup';
+import {loginValidationSchema} from '../../validation/ValidationSchemas';
 
 const LoginPage: React.FC = () => {
     const navigate = useNavigate();
     const [error, setError] = useState('');
 
-    const validationSchema = yup.object().shape({
-        username: yup.string().required('Username is required'),
-        password: yup.string().required('Password is required'),
-    });
-
+  
     const formik = useFormik({
         initialValues: {
             username: '',
             password: '',
         },
-        validationSchema: validationSchema,
+        validationSchema: loginValidationSchema,
         onSubmit: async (values) => {
             try {
                 const response = await axios.post('http://localhost:3000/api/login', {

@@ -3,7 +3,7 @@ import { useOrder } from "../../context/OrderContext";
 import { IoMdMenu } from "react-icons/io";
 import { IoCloseSharp } from "react-icons/io5";
 export default function AdminNavbar() {
-  const { setView } = useOrder();
+  const { setView,fetchOrders } = useOrder();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
@@ -53,7 +53,7 @@ export default function AdminNavbar() {
         <button onClick={() => setView("addItems")} className="text-white">
           Add Category/Items
         </button>
-        <button onClick={() => setView("viewOrders")} className="text-white">
+        <button onClick={() => {setView("viewOrders")}} className="text-white">
           View Orders
         </button>
         <button onClick={() => setView("editCategory")} className="text-white">

@@ -5,12 +5,8 @@ import Order from "../../components/orders/Order";
 
 
 const ViewOrders: React.FC = () => {
-  const { fetchCategories, view, fetchOrders } = useOrder();
+  const {  view } = useOrder();
 
-  useEffect(() => {
-    fetchCategories();
-    fetchOrders();
-  }, []);
 
   return (
     <div>

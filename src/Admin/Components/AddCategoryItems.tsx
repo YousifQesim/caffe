@@ -1,63 +1,59 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { useOrder } from "../../context/OrderContext";
-import  Items  from "../../components/items/Items";
+import api from "../../utilities/getServer";
+import { useFormik } from "formik";
+import { categorySchema, itemSchema } from "../../validation/ValidationSchemas";
 export default function AddCategoryItems() {
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newItemName, setNewItemName] = useState("");
   const [newItemPrice, setNewItemPrice] = useState<number>(0);
   const [selectedItemImage, setSelectedItemImage] = useState<File | null>(null);
+  const {  categories,setCategories, view,selectedCategory,setSelectedCategory} = useOrder();
 
-  const { fetchCategories, categories, view,selectedCategory} = useOrder();
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
 
-  const handleAddCategory = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (newCategoryName !== "") {
-      axios
-        .post("http://localhost:3000/api/categories", { name: newCategoryName })
-        .then(() => {
-          setNewCategoryName("");
-          fetchCategories();
-        })
-        .catch((error) => console.error("Error adding category:", error));
-    } else {
-      console.error("Please enter a category name");
-    }
-  };
-
-  const handleAddItem = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (selectedCategory === null) {
-      console.error("Please select a category");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("name", newItemName);
-    formData.append("price", newItemPrice.toString());
-    formData.append("image", selectedItemImage as Blob);
-
-    axios
-      .post(`http://localhost:3000/api/items/${selectedCategory}`, formData, {
+  const formikCategory = useFormik({
+    initialValues: { newCategoryName: '' },
+    validationSchema: categorySchema,
+    onSubmit: (values, { resetForm }) => {
+      api(`/categories`, {
+        method: "POST",
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify({ name: values.newCategoryName }),
       })
-      .then(() => {
-        setNewItemName("");
-        setNewItemPrice(0);
-        setSelectedItemImage(null);
-        <Items categoryId={selectedCategory} />
-      })
-      .catch((error) => console.error("Error adding item:", error));
-  };
+        .then(response => response.json())
+        .then(data => {
+          resetForm();
+          setCategories(prevCategories => [...prevCategories, data]);
+        })
+        .catch(error => console.error("Error adding category:", error));
+    }
+  });
 
+  const formikItem = useFormik({
+    initialValues: { newItemName: '', newItemPrice: 0, selectedItemImage: null, selectedCategory: '' },
+    validationSchema: itemSchema,
+    onSubmit: (values, { resetForm }) => {
+      const formData = new FormData();
+      formData.append("name", values.newItemName);
+      formData.append("price", values.newItemPrice.toString());
+      formData.append("image", values.selectedItemImage || "");
+
+      api(`/items/${values.selectedCategory}`, {
+        method: "POST",
+        body: formData,
+      })
+        .then(response => response.json())
+        .then(data => {
+          resetForm();
+        })
+        .catch(error => console.error("Error adding item:", error));
+    }
+  });
+
+  
   return (
 <div className="flex flex-col md:flex-row justify-center items-center gap-8 flex-wrap w-full">
 {view === "addItems" && (
@@ -67,7 +63,7 @@ export default function AddCategoryItems() {
               Add Category
             </h2>
             <form
-              onSubmit={handleAddCategory}
+              onSubmit={formikCategory.handleSubmit}
               className="w-full flex flex-col p-4"
             >
               <input
@@ -78,6 +74,8 @@ export default function AddCategoryItems() {
                 onChange={(e) => setNewCategoryName(e.target.value)}
                 className="border rounded-md px-3 py-2 mt-2 focus:outline-none focus:border-main placeholder-main"
               />
+             
+              
               <div className="flex justify-center">
                 <button
                   type="submit"
@@ -93,12 +91,11 @@ export default function AddCategoryItems() {
             <h2 className="font-bold text-center text-white text-2xl mt-4">
               Add Item
             </h2>
-            <form onSubmit={handleAddItem} className="flex flex-col p-4">
+            <form onSubmit={formikItem.handleSubmit} className="flex flex-col p-4">
               <select
                 required
                 onChange={(e) => {
-                  const categoryId = parseInt(e.target.value);
-             <Items categoryId={categoryId} />
+                  setSelectedCategory(parseInt(e.target.value));
                   
                 }}
                 className="border rounded-md px-3 py-2 mt-2 focus:outline-none focus:border-main text-main"

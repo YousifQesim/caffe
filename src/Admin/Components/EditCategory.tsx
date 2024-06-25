@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useOrder } from "../../context/OrderContext";
 import Order from "../../interfaces/OrderProps";
+import useFetch from "../../hooks/useFetch";
+import api from "../../utilities/getServer";
 
 const EditCategory: React.FC = () => {
   const [updateCategoryName, setUpdateCategoryName] = useState("");
@@ -11,15 +13,10 @@ const EditCategory: React.FC = () => {
 
   useEffect(() => {
     fetchCategories();
-    fetchOrders();
+  
   }, []);
 
-  const fetchOrders = () => {
-    axios
-      .get("http://localhost:3000/api/orders")
-      .then((response) => setOrders(response.data))
-      .catch((error) => console.error("Error fetching orders:", error));
-  };
+ 
 
   const handleUpdateCategory = (
     event: React.FormEvent<HTMLFormElement>,
@@ -28,25 +25,31 @@ const EditCategory: React.FC = () => {
     event.preventDefault();
 
     if (updateCategoryName !== "") {
-      axios
-        .put(`http://localhost:3000/api/categories/${categoryId}`, {
-          name: updateCategoryName,
-        })
+api(`/categories/${categoryId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: updateCategoryName }),
+      })
+        .then(response => response.json())
         .then(() => {
           setUpdateCategoryName("");
           fetchCategories();
         })
-        .catch((error) => console.error("Error updating category:", error));
+        .catch(error => console.error("Error updating category:", error));
     } else {
       console.error("Please enter a category name");
     }
   };
 
   const handleDeleteCategory = (categoryId: number) => {
-    axios
-      .delete(`http://localhost:3000/api/categories/${categoryId}`)
-      .then(() => fetchCategories())
-      .catch((error) => console.error("Error deleting category:", error));
+    api(`/categories/${categoryId}`, {
+        method: "DELETE",
+      })
+        .then(() => fetchCategories())
+        .catch(error => console.error("Error deleting category:", error)
+    )
   };
 
   return (

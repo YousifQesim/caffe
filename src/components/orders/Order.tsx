@@ -1,18 +1,14 @@
-import { useState, useEffect, useCallback } from 'react';
-import useFetch from "../../hooks/useFetch";
-import Orders from "../../interfaces/OrderProps";
-import SkeletonLoadingCard from "../SkeltonLoading";
+import { useEffect, useCallback } from 'react';
 import OrderItem from "../../interfaces/OrderItemProps";
 import api from "../../utilities/getServer";
 import { useOrder } from "../../context/OrderContext";
 
 export default function Order() {
-  const { data: initialOrders= [], isLoading, refetch } = useFetch<Orders[]>("/orders");
-  const { setOrders } = useOrder();
+  const { setOrders, orders, fetchOrders } = useOrder();
 
   useEffect(() => {
-    return setOrders(initialOrders?initialOrders:[]);
-  }, [initialOrders, setOrders]);
+    fetchOrders();
+  }, [fetchOrders]);
 
   const handleRemoveOrder = useCallback((orderId: number) => {
     api(`/orders/${orderId}`, {
@@ -23,15 +19,13 @@ export default function Order() {
     }).then(response => {
       if (response.ok) {
         setOrders(prevOrders => prevOrders.filter(order => order.id !== orderId));
-        refetch(); // Re-fetch data to ensure the latest state
       } else {
         console.error('Failed to delete order');
       }
     });
-  }, [setOrders, refetch]);
+  }, [setOrders]);
 
   const handleAcceptOrder = useCallback((orderId: number) => {
-    // Implement the accept order logic similarly to handleRemoveOrder
     api(`/orders/${orderId}/accept`, {
       method: 'PUT',
       headers: {
@@ -39,56 +33,59 @@ export default function Order() {
       }
     }).then(response => {
       if (response.ok) {
-        refetch(); // Re-fetch data to ensure the latest state
+        // Optionally, update the order status in the state
+        setOrders(prevOrders => prevOrders.map(order => 
+          order.id === orderId ? { ...order, accepted: true } : order
+        ));
       } else {
         console.error('Failed to accept order');
       }
     });
-  }, [refetch]);
+  }, [setOrders]);
 
   const RenderOrderItems = () => {
-    return isLoading
-      ? Array.from({ length: 5 }).map((_, index) => (
-        <SkeletonLoadingCard key={index} />
-      ))
-      : initialOrders?.map((order) => (
-        <tr
-          key={order.id}
-          className={`${order.accepted ? "bg-green-300" : "bg-red-300"} `}
-        >
-          <td className="border px-2 md:px-4 py-2">{order.tableNumber}</td>
-          <td className="border px-2 md:px-4 py-2">
-            <div className="flex flex-col">
-              {order.items.map((item: OrderItem) => (
-                <p key={`${order.id}-${item.id}`}>{item.toString()}</p>
-              ))}
-            </div>
-          </td>
-          <td className="border px-2 md:px-4 py-2">{order.totalPrice} IQD</td>
-          <td className="border px-2 md:px-4 py-2">
-            {order.accepted ? "Accepted" : "Pending"}
-          </td>
-          <td className="border px-2 md:px-4 py-2">
-            {!order.accepted && (
-              <button
-                onClick={() => handleAcceptOrder(order.id)}
-                className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded focus:outline-none focus:shadow-outline mr-2 mb-2 md:mr-0 md:mb-0"
-              >
-                Accept
-              </button>
-            )}
-
+    return orders?.map((order) => (
+      <tr
+        key={order.id}
+        className={`${order.accepted ? "bg-green-300" : "bg-red-300"} `}
+      >
+        <td className="border px-2 md:px-4 py-2">{order.tableNumber}</td>
+        <td className="border px-2 md:px-4 py-2">
+          <div className="flex flex-col">
+            {order.items.map((item: OrderItem) => (
+              <p key={`${order.id}-${item.id}`}>{item.toString()}</p>
+            ))}
+          </div>
+        </td>
+        <td className="border px-2 md:px-4 py-2">{order.totalPrice} IQD</td>
+        <td className="border px-2 md:px-4 py-2">
+          {order.accepted ? "Accepted" : "Pending"}
+        </td>
+        <td className="border px-2 md:px-4 py-2">
+          {!order.accepted && (
             <button
-              onClick={() => handleRemoveOrder(order.id)}
-              className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded focus:outline-none focus:shadow-outline"
+              onClick={() => handleAcceptOrder(order.id)}
+              className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded focus:outline-none focus:shadow-outline mr-2 mb-2 md:mr-0 md:mb-0"
             >
-              Remove
+              Accept
             </button>
-          </td>
-        </tr>
-      ));
+          )}
+
+          <button
+            onClick={() => handleRemoveOrder(order.id)}
+            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded focus:outline-none focus:shadow-outline"
+          >
+            Remove
+          </button>
+        </td>
+      </tr>
+    ));
   };
 
-  return <>{RenderOrderItems()}</>;
+  return (
+    <>
+        {RenderOrderItems()}
+    </>
+    
+  );
 }
-

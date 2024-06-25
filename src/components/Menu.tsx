@@ -2,8 +2,8 @@ import { useOrder } from "../context/OrderContext";
 import { FaShoppingCart } from "react-icons/fa";
 
 import Categories from "../components/categories/categories";
-import Items from "../components/items/Items";
 import Modal from "../components/modal/Modal";
+import Items from "./items/Items";
 
 export default function Menu() {
   const {
@@ -13,7 +13,7 @@ export default function Menu() {
     isModalOpen,
     
   } = useOrder();
-
+console.log(selectedCategory)
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -40,7 +40,7 @@ export default function Menu() {
         <div className="flex justify-center flex-wrap gap-4 mb-4">
           {Categories()}
         </div>
-        <div>{selectedCategory && <Items categoryId={selectedCategory} />}</div>
+        <div>{<Items/>}</div>
         <button
           onClick={toggleModal}
           className="absolute top-4 right-4 p-3 bg-main text-white rounded-full shadow-lg hover:bg-main-dark transition duration-300"
